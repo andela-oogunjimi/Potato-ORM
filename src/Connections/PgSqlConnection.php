@@ -4,6 +4,7 @@ namespace Opeyemiabiodun\PotatoORM\Connections;
 
 use PDO;
 use PDOException;
+use Opeyemiabiodun\PotatoORM\Connections\Connection;
 
 final class PgSqlConnection extends Connection
 {
