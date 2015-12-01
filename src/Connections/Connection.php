@@ -34,7 +34,7 @@ abstract class Connection
 
     protected function loadDbEnv()
     {
-        $dotenv = new Dotenv(__DIR__);
+        $dotenv = new Dotenv(__DIR__.'/..');
         $dotenv->required(['DB_HOST', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD', 'DB_PORT'])->notEmpty();
         $dotenv->load();
 
