@@ -1,18 +1,43 @@
 <?php
 
-namespace Opeyemiabiodun\PotatoORM\Model;
+namespace Opeyemiabiodun\PotatoORM\Models;
 
-interface Model
+class Model
 {
-    public static function getAll();
+	private static $modelCollection = [];
 
-    public function __get($property);
+    public function __construct()
+    {
+        
+    }
 
-    public function __set($property, $value);
+    public function __get($property)
+    {
 
-    public static function find($number);
+    }
 
-    public function save();
+    public function __set($property, $value)
+    {
+        
+    }
 
-    public static function destroy($number);
+    public static function destroy($number)
+    {
+
+    }
+
+    public static function find($number)
+    {
+
+    }
+
+    public static function getAll()
+    {
+
+    }
+
+    public function save()
+    {
+
+    }
 }
