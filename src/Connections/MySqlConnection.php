@@ -8,13 +8,17 @@ use Opeyemiabiodun\PotatoORM\Connections\Connection;
 
 final class MySqlConnection extends Connection
 {
+    /**
+     * The method called in the constructor.
+     * @return void
+     */
     protected function connect()
     {
         $this->useDbEnv();
 
-        $dsn = 'mysql:host='.$this->_host
-                .';port='.$this->_port
-                .';dbname='.$this->_database;
+        $dsn = 'mysql:host='.$this->_host;
+        $dsn .= (isset($this->_port)) ? ';port='.$this->_port : '';
+        $dsn .= ';dbname='.$this->_database;
 
         try {
             $this->_pdo = new PDO($dsn, $this->_username, $this->_password);
@@ -22,6 +26,11 @@ final class MySqlConnection extends Connection
         }
     }
 
+    /**
+     * Returns the columns of a table.
+     * @param  string $table The table inspected for its columns.
+     * @return array         The columns of the table.        
+     */
     public function getColumns($table)
     {
         return $this->getPdo()->query("SELECT COLUMN_NAME
@@ -30,6 +39,11 @@ final class MySqlConnection extends Connection
                                         AND TABLE_SCHEMA = N{$this->_database}")->fetchAll();
     }
 
+    /**
+     * Returns the primary key of a table.
+     * @param  string $table The table inspected for its primary key.
+     * @return string        The primary key of the table.
+     */
     public function getPrimaryKey($table)
     {
         return $this->getPdo()->query("SHOW KEYS FROM {$table} WHERE Key_name = 'PRIMARY'")->fetchAll()[0]["Column_name"];
