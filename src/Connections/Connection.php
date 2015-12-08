@@ -73,7 +73,7 @@ abstract class Connection
      */
     protected function loadDbEnv()
     {
-        $dotenv = new Dotenv(__DIR__.'/..');
+        $dotenv = new Dotenv(__DIR__.'/../..');
         $dotenv->required(['DB_HOST', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'])->notEmpty();
         $dotenv->required(['DB_PORT']);
         $dotenv->load();
@@ -108,6 +108,14 @@ abstract class Connection
      */
     public function createRecord($table, $record)
     {
+        if (gettype($table) !== 'string') {
+            throw new Exception("Error Processing Request", 1);            
+        } 
+
+        if (gettype($record) !== 'array') {
+            throw new Exception("Error Processing Request", 1);            
+        } 
+
         $count = count($record);
 
         $sql = "INSERT INTO {$table} (";
@@ -143,6 +151,14 @@ abstract class Connection
      */
     public function deleteRecord($table, $pk)
     {
+        if (gettype($table) !== 'string') {
+            throw new Exception("Error Processing Request", 1);            
+        } 
+
+        if (gettype($pk) !== 'string') {
+            throw new Exception("Error Processing Request", 1);            
+        } 
+
         return $this->getPdo()->prepare("DELETE FROM {$table}
                                             WHERE {$this->getPrimaryKey($table)}={$pk}")->execute();
     }
@@ -155,6 +171,14 @@ abstract class Connection
      */
     public function findRecord($table, $pk)
     {
+        if (gettype($table) !== 'string') {
+            throw new Exception("Error Processing Request", 1);            
+        } 
+
+        if (gettype($pk) !== 'string') {
+            throw new Exception("Error Processing Request", 1);            
+        }
+
         return $this->getPdo()->query("SELECT * FROM {$table}
                                         WHERE {$this->getPrimaryKey($table)}={$pk}")->fetchAll();
     }
@@ -166,6 +190,10 @@ abstract class Connection
      */
     public function getAllRecords($table)
     {
+        if (gettype($table) !== 'string') {
+            throw new Exception("Error Processing Request", 1);            
+        } 
+
         return $this->getPdo()->query("SELECT * FROM {$table}")->fetchAll();
     }
 
@@ -191,7 +219,19 @@ abstract class Connection
      * @return bool           Returns boolean true if the record was successfully updated or else it returns false.
      */
     public function updateRecord($table, $pk, $record)
-    {
+    {        
+        if (gettype($table) !== 'string') {
+            throw new Exception("Error Processing Request", 1);            
+        } 
+
+        if (gettype($pk) !== 'string') {
+            throw new Exception("Error Processing Request", 1);            
+        }
+        
+        if (gettype($record) !== 'array') {
+            throw new Exception("Error Processing Request", 1);            
+        } 
+
         $count = count($record);
 
         $sql = "UPDATE {$table} SET ";

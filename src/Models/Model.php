@@ -4,7 +4,7 @@ namespace Opeyemiabiodun\PotatoORM\Models;
 
 use Exception;
 use Opeyemiabiodun\PotatoORM\Connections\Connection;
-use Opeyemiabiodun\PotatoORM\Connections\MySqlConnection;
+use Opeyemiabiodun\PotatoORM\Connections\PgSqlConnection;
 
 trait Model
 {
@@ -40,14 +40,16 @@ trait Model
     public function __construct(Connection $connection = null, $table = null)
     {
         if (is_null($connection)) {
-            $this->setConnection(new MySqlConnection());
-        } else {
+            $this->setConnection(new PgSqlConnection());
+        } 
+        else {
             $this->setConnection($connection);
         }
 
         if (is_null($table)) {
             $this->setTable(get_class($this).'-table');
-        } else {
+        }
+        else {            
             $this->setTable($table);
         }
     }
@@ -59,9 +61,11 @@ trait Model
      */
     public function __get($property)
     {
-        if (array_key_exists($property, $_attributes))
-        {
+        if (array_key_exists($property, $_attributes)) {
             return $_attributes[$property];
+        }
+        else {
+            throw new Exception("Error Processing Request", 1);            
         }
     }
 
@@ -77,9 +81,11 @@ trait Model
             throw new Exception("Error Processing Request", 1);    
         }
 
-        if (array_key_exists($property, $_attributes))
-        {
+        if (array_key_exists($property, $_attributes)) {
             $_attributes[$property] = $value;
+        }
+        else {
+            throw new Exception("Error Processing Request", 1);            
         }
     }
 
@@ -90,6 +96,10 @@ trait Model
      */
     public static function destroy($number)
     {
+        if ($number <= 0) {
+            throw new Exception("Error Processing Request", 1);            
+        }
+
         return $this->_connection->deleteRecord($this->_table, $number - 1);
     }
 
@@ -151,9 +161,10 @@ trait Model
             throw new Exception("Error Processing Request", 1);
         }
 
-        if (empty($this->_connection->findRecord($this->_table, $this->_attributes)) {
+        if (empty($this->_connection->findRecord($this->_table, $this->_attributes[getPrimaryKey($this->_table)]))) {
             return $this->_connection->createRecord($this->_table, $this->_attributes);
-        } else {
+        } 
+        else {
             return $this->_connection->updateRecord($this->_table, $this->_attributes);
         }
     }
@@ -172,7 +183,11 @@ trait Model
      * @param string $table An existing table in the database.
      */
     protected static function setTable($table)
-    {
+    { 
+        if (gettype($table) !== 'string') {
+            throw new Exception("Error Processing Request", 1);            
+        } 
+        
         $this->_table = $table;
 
         $columns = $this->_connection->getColumns($table);

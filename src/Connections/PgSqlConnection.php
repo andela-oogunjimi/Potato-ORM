@@ -35,6 +35,10 @@ final class PgSqlConnection extends Connection
      */
     public function getColumns($table)
     {
+        if (gettype($table) !== 'string') {
+            throw new Exception("Error Processing Request", 1);            
+        }
+
         return $this->getPdo()->query("SELECT COLUMN_NAME
                                         FROM {$this->_database}.INFORMATION_SCHEMA.COLUMNS
                                         WHERE TABLE_NAME = N{$table}")->fetchAll();
@@ -47,6 +51,10 @@ final class PgSqlConnection extends Connection
      */
     public function getPrimaryKey($table)
     {
+        if (gettype($table) !== 'string') {
+            throw new Exception("Error Processing Request", 1);            
+        }
+        
         return $this->getPdo()->query("SELECT KU.table_name as tablename,column_name as primarykeycolumn
                                         FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC
                                         INNER JOIN

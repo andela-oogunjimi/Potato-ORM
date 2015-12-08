@@ -33,6 +33,10 @@ final class MySqlConnection extends Connection
      */
     public function getColumns($table)
     {
+        if (gettype($table) !== 'string') {
+            throw new Exception("Error Processing Request", 1);            
+        } 
+
         return $this->getPdo()->query("SELECT COLUMN_NAME
                                         FROM INFORMATION_SCHEMA.COLUMNS
                                         WHERE TABLE_NAME = N{$table} 
@@ -46,6 +50,10 @@ final class MySqlConnection extends Connection
      */
     public function getPrimaryKey($table)
     {
+        if (gettype($table) !== 'string') {
+            throw new Exception("Error Processing Request", 1);            
+        }
+        
         return $this->getPdo()->query("SHOW KEYS FROM {$table} WHERE Key_name = 'PRIMARY'")->fetchAll()[0]["Column_name"];
     }
 }
