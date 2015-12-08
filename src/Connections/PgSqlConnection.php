@@ -2,9 +2,10 @@
 
 namespace Opeyemiabiodun\PotatoORM\Connections;
 
-use InvalidArgumentException;
 use PDO;
 use PDOException;
+use InvalidArgumentException;
+use Opeyemiabiodun\PotatoORM\Connections\Connection;
 
 final class PgSqlConnection extends Connection
 {

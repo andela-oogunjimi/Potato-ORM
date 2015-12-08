@@ -69,8 +69,8 @@ trait Model
      */
     public function __get($property)
     {
-        if (array_key_exists($property, $_attributes)) {
-            return $_attributes[$property];
+        if (array_key_exists($property, $this->_attributes)) {
+            return $this->_attributes[$property];
         } else {
             throw new PropertyNotFoundException("The {get_class($this)} instance has no {$property} property.");
         }
@@ -88,8 +88,8 @@ trait Model
             throw new AssignmentException("{$value} is not a scalar value. Only scalar values can be assigned to the {$property} property.");
         }
 
-        if (array_key_exists($property, $_attributes)) {
-            $_attributes[$property] = $value;
+        if (array_key_exists($property, $this->_attributes)) {
+            $this->_attributes[$property] = $value;
         } else {
             throw new PropertyNotFoundException("The {get_class($this)} instance has no {$property} property.");
         }
@@ -155,7 +155,7 @@ trait Model
         $hasAttributes = false;
 
         foreach ($this->_attributes as $key => $value) {
-            if (!is_null($value)) {
+            if (! is_null($value)) {
                 $hasAttributes = true;
             }
         }
