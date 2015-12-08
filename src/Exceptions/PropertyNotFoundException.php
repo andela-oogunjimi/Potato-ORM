@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Opeyemiabiodun\PotatoORM\Exceptions;
 
 use Exception;

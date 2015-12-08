@@ -8,7 +8,7 @@
 [![Total Downloads][ico-downloads]][link-downloads]
 
 ###### CheckPoint 2 - Potato ORM
-A Simple PHP ORM. PSR-2 coding standard was adopted in writing the package. The PSR-4 autoloading convention was also adopted.
+A Simple PHP ORM (Object Relational Mapper). PSR-2 coding standard was adopted in writing the package. The PSR-4 autoloading convention was also adopted.
 
 ## Install
 
