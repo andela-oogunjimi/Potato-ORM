@@ -2,9 +2,9 @@
 
 namespace Opeyemiabiodun\PotatoORM\Connections;
 
+use InvalidArgumentException;
 use PDO;
 use PDOException;
-use InvalidArgumentException;
 
 final class MySqlConnection extends Connection
 {
@@ -17,9 +17,9 @@ final class MySqlConnection extends Connection
     {
         $this->useDbEnv();
 
-        $dsn = "mysql:host=".$this->_host;
-        $dsn .= (isset($this->_port)) ? ";port=".$this->_port : "";
-        $dsn .= ";dbname=".$this->_database;
+        $dsn = 'mysql:host='.$this->_host;
+        $dsn .= (isset($this->_port)) ? ';port='.$this->_port : '';
+        $dsn .= ';dbname='.$this->_database;
 
         try {
             $this->_pdo = new PDO($dsn, $this->_username, $this->_password);
@@ -36,7 +36,7 @@ final class MySqlConnection extends Connection
      */
     public function getColumns($table)
     {
-        if (gettype($table) !== "string") {
+        if (gettype($table) !== 'string') {
             throw new InvalidArgumentException("The parameter {$table} is not an string. A string is required instead.");
         }
 
@@ -55,10 +55,10 @@ final class MySqlConnection extends Connection
      */
     public function getPrimaryKey($table)
     {
-        if (gettype($table) !== "string") {
+        if (gettype($table) !== 'string') {
             throw new InvalidArgumentException("The parameter {$table} is not an string. A string is required instead.");
         }
 
-        return $this->getPdo()->query("SHOW KEYS FROM {$table} WHERE Key_name = 'PRIMARY'")->fetchAll()[0]["Column_name"];
+        return $this->getPdo()->query("SHOW KEYS FROM {$table} WHERE Key_name = 'PRIMARY'")->fetchAll()[0]['Column_name'];
     }
 }

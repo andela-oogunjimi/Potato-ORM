@@ -2,10 +2,10 @@
 
 namespace Opeyemiabiodun\PotatoORM\Connections;
 
-use Exception;
 use Dotenv\Dotenv;
-use RuntimeException;
+use Exception;
 use InvalidArgumentException;
+use RuntimeException;
 
 abstract class Connection
 {
@@ -83,17 +83,17 @@ abstract class Connection
      */
     protected function loadDbEnv()
     {
-        $dotenv = new Dotenv(__DIR__."/../..");
-        $dotenv->required(["DB_HOST", "DB_DATABASE", "DB_USERNAME", "DB_PASSWORD"])->notEmpty();
-        $dotenv->required(["DB_PORT"]);
+        $dotenv = new Dotenv(__DIR__.'/../..');
+        $dotenv->required(['DB_HOST', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'])->notEmpty();
+        $dotenv->required(['DB_PORT']);
         $dotenv->load();
 
-        $this->_host = getenv("DB_HOST");
-        $this->_database = getenv("DB_DATABASE");
-        $this->_username = getenv("DB_USERNAME");
-        $this->_password = getenv("DB_PASSWORD");
-        if (null !== getenv("DB_PORT")) {
-            $this->_port = getenv("DB_PORT");
+        $this->_host = getenv('DB_HOST');
+        $this->_database = getenv('DB_DATABASE');
+        $this->_username = getenv('DB_USERNAME');
+        $this->_password = getenv('DB_PASSWORD');
+        if (null !== getenv('DB_PORT')) {
+            $this->_port = getenv('DB_PORT');
         }
     }
 
@@ -121,11 +121,11 @@ abstract class Connection
      */
     public function createRecord($table, $record)
     {
-        if (gettype($table) !== "string") {
+        if (gettype($table) !== 'string') {
             throw new InvalidArgumentException("The parameter {$table} is not a string. A string is required instead.");
         }
 
-        if (gettype($record) !== "array") {
+        if (gettype($record) !== 'array') {
             throw new InvalidArgumentException("The parameter {$record} is not an array. An array is required instead.");
         }
 
@@ -143,7 +143,7 @@ abstract class Connection
 
         $count = count($record);
 
-        $sql .= "VALUES (";
+        $sql .= 'VALUES (';
         foreach ($record as $key => $value) {
             if ($count > 1) {
                 $sql = $sql."{$value}, ";
@@ -166,11 +166,11 @@ abstract class Connection
      */
     public function deleteRecord($table, $pk)
     {
-        if (gettype($table) !== "string") {
+        if (gettype($table) !== 'string') {
             throw new InvalidArgumentException("The parameter {$table} is not a string. A string is required instead.");
         }
 
-        if (gettype($pk) !== "string") {
+        if (gettype($pk) !== 'string') {
             throw new InvalidArgumentException("The parameter {$pk} is not a string. A string is required instead.");
         }
 
@@ -188,11 +188,11 @@ abstract class Connection
      */
     public function findRecord($table, $pk)
     {
-        if (gettype($table) !== "string") {
+        if (gettype($table) !== 'string') {
             throw new InvalidArgumentException("The parameter {$table} is not a string. A string is required instead.");
         }
 
-        if (gettype($pk) !== "string") {
+        if (gettype($pk) !== 'string') {
             throw new InvalidArgumentException("The parameter {$pk} is not a string. A string is required instead.");
         }
 
@@ -209,7 +209,7 @@ abstract class Connection
      */
     public function getAllRecords($table)
     {
-        if (gettype($table) !== "string") {
+        if (gettype($table) !== 'string') {
             throw new InvalidArgumentException("The parameter {$table} is not a string. A string is required instead.");
         }
 
@@ -245,15 +245,15 @@ abstract class Connection
      */
     public function updateRecord($table, $pk, $record)
     {
-        if (gettype($table) !== "string") {
+        if (gettype($table) !== 'string') {
             throw new InvalidArgumentException("The parameter {$table} is not a string. A string is required instead.");
         }
 
-        if (gettype($pk) !== "string") {
+        if (gettype($pk) !== 'string') {
             throw new InvalidArgumentException("The parameter {$pk} is not a string. A string is required instead.");
         }
 
-        if (gettype($record) !== "array") {
+        if (gettype($record) !== 'array') {
             throw new InvalidArgumentException("The parameter {$record} is not an array. An array is required instead.");
         }
 

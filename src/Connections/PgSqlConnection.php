@@ -2,9 +2,9 @@
 
 namespace Opeyemiabiodun\PotatoORM\Connections;
 
+use InvalidArgumentException;
 use PDO;
 use PDOException;
-use InvalidArgumentException;
 
 final class PgSqlConnection extends Connection
 {
@@ -17,11 +17,11 @@ final class PgSqlConnection extends Connection
     {
         $this->useDbEnv();
 
-        $dsn = "pgsql:host=".$this->_host;
-        $dsn .= (isset($this->_port)) ? ";port=".$this->_port : "";
-        $dsn .= ";dbname=".$this->_database;
-        $dsn .= ";user=".$this->_username;
-        $dsn .= ";password=".$this->_password;
+        $dsn = 'pgsql:host='.$this->_host;
+        $dsn .= (isset($this->_port)) ? ';port='.$this->_port : '';
+        $dsn .= ';dbname='.$this->_database;
+        $dsn .= ';user='.$this->_username;
+        $dsn .= ';password='.$this->_password;
 
         try {
             $this->_pdo = new PDO($dsn);
@@ -38,7 +38,7 @@ final class PgSqlConnection extends Connection
      */
     public function getColumns($table)
     {
-        if (gettype($table) !== "string") {
+        if (gettype($table) !== 'string') {
             throw new InvalidArgumentException("The parameter {$table} is not an string. A string is required instead.");
         }
 
@@ -56,7 +56,7 @@ final class PgSqlConnection extends Connection
      */
     public function getPrimaryKey($table)
     {
-        if (gettype($table) !== "string") {
+        if (gettype($table) !== 'string') {
             throw new InvalidArgumentException("The parameter {$table} is not an string. A string is required instead.");
         }
 
