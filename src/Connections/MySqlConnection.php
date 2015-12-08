@@ -2,14 +2,15 @@
 
 namespace Opeyemiabiodun\PotatoORM\Connections;
 
+use InvalidArgumentException;
 use PDO;
 use PDOException;
-use Opeyemiabiodun\PotatoORM\Connections\Connection;
 
 final class MySqlConnection extends Connection
 {
     /**
      * The method called in the constructor.
+     *
      * @return void
      */
     protected function connect()
@@ -28,24 +29,36 @@ final class MySqlConnection extends Connection
 
     /**
      * Returns the columns of a table.
-     * @param  string $table The table inspected for its columns.
-     * @return array         The columns of the table.        
+     *
+     * @param string $table The table inspected for its columns.
+     *
+     * @return array The columns of the table.        
      */
     public function getColumns($table)
     {
+        if (gettype($table) !== 'string') {
+            throw new InvalidArgumentException("The parameter {$table} is not an string. A string is required instead.");
+        }
+
         return $this->getPdo()->query("SELECT COLUMN_NAME
                                         FROM INFORMATION_SCHEMA.COLUMNS
-                                        WHERE TABLE_NAME = N{$table} 
-                                        AND TABLE_SCHEMA = N{$this->_database}")->fetchAll();
+                                        WHERE TABLE_NAME = N'{$table}' 
+                                        AND TABLE_SCHEMA = N'{$this->_database}'")->fetchAll();
     }
 
     /**
      * Returns the primary key of a table.
-     * @param  string $table The table inspected for its primary key.
-     * @return string        The primary key of the table.
+     *
+     * @param string $table The table inspected for its primary key.
+     *
+     * @return string The primary key of the table.
      */
     public function getPrimaryKey($table)
     {
-        return $this->getPdo()->query("SHOW KEYS FROM {$table} WHERE Key_name = 'PRIMARY'")->fetchAll()[0]["Column_name"];
+        if (gettype($table) !== 'string') {
+            throw new InvalidArgumentException("The parameter {$table} is not an string. A string is required instead.");
+        }
+
+        return $this->getPdo()->query("SHOW KEYS FROM {$table} WHERE Key_name = 'PRIMARY'")->fetchAll()[0]['Column_name'];
     }
 }
