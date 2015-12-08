@@ -2,10 +2,10 @@
 
 namespace Opeyemiabiodun\PotatoORM\Connections;
 
-use Dotenv\Dotenv;
 use Exception;
-use InvalidArgumentException;
+use Dotenv\Dotenv;
 use RuntimeException;
+use InvalidArgumentException;
 
 abstract class Connection
 {
