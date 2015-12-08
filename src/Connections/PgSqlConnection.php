@@ -4,12 +4,12 @@ namespace Opeyemiabiodun\PotatoORM\Connections;
 
 use PDO;
 use PDOException;
-use Opeyemiabiodun\PotatoORM\Connections\Connection;
 
 final class PgSqlConnection extends Connection
 {
     /**
      * The method called in the constructor.
+     *
      * @return void
      */
     protected function connect()
@@ -30,13 +30,15 @@ final class PgSqlConnection extends Connection
 
     /**
      * Returns the columns of a table.
-     * @param  string $table The table inspected for its columns.
-     * @return array         The columns of the table.        
+     *
+     * @param string $table The table inspected for its columns.
+     *
+     * @return array The columns of the table.        
      */
     public function getColumns($table)
     {
         if (gettype($table) !== 'string') {
-            throw new Exception("Error Processing Request", 1);            
+            throw new Exception('Error Processing Request', 1);
         }
 
         return $this->getPdo()->query("SELECT COLUMN_NAME
@@ -46,15 +48,17 @@ final class PgSqlConnection extends Connection
 
     /**
      * Returns the primary key of a table.
-     * @param  string $table The table inspected for its primary key.
-     * @return string        The primary key of the table.
+     *
+     * @param string $table The table inspected for its primary key.
+     *
+     * @return string The primary key of the table.
      */
     public function getPrimaryKey($table)
     {
         if (gettype($table) !== 'string') {
-            throw new Exception("Error Processing Request", 1);            
+            throw new Exception('Error Processing Request', 1);
         }
-        
+
         return $this->getPdo()->query("SELECT KU.table_name as tablename,column_name as primarykeycolumn
                                         FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC
                                         INNER JOIN
@@ -65,9 +69,3 @@ final class PgSqlConnection extends Connection
                                         ORDER BY KU.TABLE_NAME, KU.ORDINAL_POSITION;")->fetchAll()[0][$table];
     }
 }
-
-
-
-
-
-
