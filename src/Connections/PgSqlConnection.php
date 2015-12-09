@@ -4,25 +4,26 @@ namespace Opeyemiabiodun\PotatoORM\Connections;
 
 use PDO;
 use PDOException;
+use RuntimeException;
 use InvalidArgumentException;
 use Opeyemiabiodun\PotatoORM\Connections\Connection;
+use Opeyemiabiodun\PotatoORM\Connections\LoadEnvVariablesTrait;
+use Opeyemiabiodun\PotatoORM\Connections\DatabaseTransactionsTrait;
 
-final class PgSqlConnection extends Connection
+final class PgSqlConnection implements Connection
 {
+    use LoadEnvVariablesTrait, DatabaseTransactionsTrait;
+
     /**
      * The method called in the constructor.
      *
      * @return void
      */
-    protected function connect()
+    private function __construct()
     {
         $this->useDbEnv();
 
-        $dsn = 'pgsql:host='.$this->_host;
-        $dsn .= (isset($this->_port)) ? ';port='.$this->_port : '';
-        $dsn .= ';dbname='.$this->_database;
-        $dsn .= ';user='.$this->_username;
-        $dsn .= ';password='.$this->_password;
+        $dsn = "pgsql:host={$this->_host};port={$this->_port};dbname={$this->_database};user={$this->_username};password={$this->_password}";
 
         try {
             $this->_pdo = new PDO($dsn);
@@ -44,8 +45,18 @@ final class PgSqlConnection extends Connection
         }
 
         return $this->getPdo()->query("SELECT COLUMN_NAME
-                                        FROM {$this->_database}.INFORMATION_SCHEMA.COLUMNS
-                                        WHERE TABLE_NAME = N'{$table}'")->fetchAll();
+                                            FROM {$this->_database}.INFORMATION_SCHEMA.COLUMNS
+                                            WHERE TABLE_NAME = N'{$table}'")->fetchAll();
+    }
+
+    /**
+     * Returns the Connection's PDO.
+     *
+     * @return PDO PHP Data Objects
+     */
+    public function getPdo()
+    {
+        return $this->_pdo;
     }
 
     /**
@@ -61,13 +72,23 @@ final class PgSqlConnection extends Connection
             throw new InvalidArgumentException("The parameter {$table} is not an string. A string is required instead.");
         }
 
-        return $this->getPdo()->query("SELECT KU.table_name as tablename,column_name as primarykeycolumn
-                                        FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC
-                                        INNER JOIN
-                                        INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KU
-                                        ON TC.CONSTRAINT_TYPE = 'PRIMARY KEY' AND
-                                        TC.CONSTRAINT_NAME = KU.CONSTRAINT_NAME
-                                        and ku.table_name='{$table}'
-                                        ORDER BY KU.TABLE_NAME, KU.ORDINAL_POSITION;")->fetchAll()[0][$table];
+        $array = $this->getPdo()->query("SELECT KU.table_name as tablename,column_name as primarykeycolumn
+                                            FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC
+                                            INNER JOIN
+                                            INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KU
+                                            ON TC.CONSTRAINT_TYPE = 'PRIMARY KEY' AND
+                                            TC.CONSTRAINT_NAME = KU.CONSTRAINT_NAME
+                                            and ku.table_name='{$table}'
+                                            ORDER BY KU.TABLE_NAME, KU.ORDINAL_POSITION;")->fetchAll();
+        if (count($array) === 0) {
+            throw new RuntimeException("Error Processing Request", 1);
+        }
+
+        return $array[0]['primarykeycolumn'];
+    }
+
+    public static function load()
+    {
+        return new PgSqlConnection();
     }
 }
