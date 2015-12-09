@@ -16,28 +16,28 @@ trait Model
      *
      * @var array
      */
-    protected $_attributes = [];
+    protected static $_attributes = [];
 
     /**
      * The model's database connection.
      *
      * @var Opeyemiabiodun\PotatoORM\Connections\Connection
      */
-    protected $_connection;
+    protected static $_connection;
 
     /**
      * The primary key of the model's database table.
      *
      * @var string
      */
-    protected $_primaryKey;
+    protected static $_primaryKey;
 
     /**
      * The model's database table.
      *
      * @var string
      */
-    protected $_table;
+    protected static $_table;
 
     /**
      * The model's constructor method.
@@ -45,18 +45,21 @@ trait Model
      * @param Connection|null $connection An Opeyemiabiodun\PotatoORM\Connections\Connection instance or null
      * @param string          $table      The name of the model's table in the database
      */
-    public function __construct(Connection $connection = null, $table = null)
+    public function __construct($array = [], Connection $connection = null, $table = null)
     {
-        if (is_null($connection)) {
-            $this->setConnection(new PgSqlConnection());
-        } else {
-            $this->setConnection($connection);
+        if (null === $connection) {
+            $connection = PgSqlConnection::load();
         }
 
-        if (is_null($table)) {
-            $this->setTable("{get_class($this)}-table");
-        } else {
-            $this->setTable($table);
+        if (null === $table) {
+            $table = strtolower(substr(get_class($this),strripos(get_class($this), "\\") + 1))."_table";
+        }
+
+        $this->setConnection($connection);
+        $this->setTable($table);
+
+        if (! empty($array)) {
+            $this->setProperties($array);
         }
     }
 
@@ -69,8 +72,8 @@ trait Model
      */
     public function __get($property)
     {
-        if (array_key_exists($property, $this->_attributes)) {
-            return $this->_attributes[$property];
+        if (array_key_exists($property, self::$_attributes)) {
+            return self::$_attributes[$property];
         } else {
             throw new PropertyNotFoundException("The {get_class($this)} instance has no {$property} property.");
         }
@@ -88,10 +91,10 @@ trait Model
             throw new AssignmentException("{$value} is not a scalar value. Only scalar values can be assigned to the {$property} property.");
         }
 
-        if (array_key_exists($property, $this->_attributes)) {
-            $this->_attributes[$property] = $value;
+        if (array_key_exists($property, self::$_attributes)) {
+            self::$_attributes[$property] = $value;
         } else {
-            throw new PropertyNotFoundException("The {get_class($this)} instance has no {$property} property.");
+            throw new PropertyNotFoundException("The ".get_class($this)." instance has no {$property} property.");
         }
     }
 
@@ -112,7 +115,7 @@ trait Model
             throw new InvalidArgumentException("The parameter {$number} is not a positive integer. A positive integer is required instead.");
         }
 
-        return $this->_connection->deleteRecord($this->_table, $number - 1);
+        return self::$_connection->deleteRecord(self::$_table, $number - 1);
     }
 
     /**
@@ -131,8 +134,10 @@ trait Model
         if ($number <= 0) {
             throw new InvalidArgumentException("The parameter {$number} is not a positive integer. A positive integer is required instead.");
         }
-
-        return $this->_connection->findRecord($this->_table, $number - 1);
+        
+        $record = self::$_connection->findRecord(self::$_table, $number - 1);
+        
+        return new self($record);
     }
 
     /**
@@ -142,7 +147,7 @@ trait Model
      */
     public static function getAll()
     {
-        return $this->_connection->getAllRecords($this->_table);
+        return self::$_connection->getAllRecords(self::$_table);
     }
 
     /**
@@ -154,7 +159,7 @@ trait Model
     {
         $hasAttributes = false;
 
-        foreach ($this->_attributes as $key => $value) {
+        foreach (self::$_attributes as $key => $value) {
             if (! is_null($value)) {
                 $hasAttributes = true;
             }
@@ -174,10 +179,14 @@ trait Model
             throw new RuntimeException("{get_class($this)} model has nothing to persist to the database.");
         }
 
-        if (empty($this->_connection->findRecord($this->_table, $this->_attributes[$this->_primaryKey]))) {
-            return $this->_connection->createRecord($this->_table, $this->_attributes);
+        $pk = (empty(self::$_attributes[self::$_primaryKey])) ? "NULL" :  self::$_attributes[self::$_primaryKey];
+
+        $record = self::$_connection->findRecord(self::$_table, (string) $pk);
+
+        if (empty($record)) {
+            return self::$_connection->createRecord(self::$_table, self::$_attributes);
         } else {
-            return $this->_connection->updateRecord($this->_table, $this->_primaryKey, $this->_attributes);
+            return self::$_connection->updateRecord(self::$_table, self::$_primaryKey, self::$_attributes);
         }
     }
 
@@ -186,9 +195,20 @@ trait Model
      *
      * @param Connection $connection An instance of Opeyemiabiodun\PotatoORM\Connections\Connection.
      */
-    protected static function setConnection(Connection $connection)
+    protected function setConnection(Connection $connection)
     {
-        $this->_connection = $connection;
+        self::$_connection = $connection;
+    }
+
+    protected function setProperties($array)
+    {
+        foreach (self::$_attributes as $key => $value) {
+
+            if (isset($array[$key])) {
+                self::$_attributes[$key] = $array[$key];
+            }
+
+        }
     }
 
     /**
@@ -196,19 +216,20 @@ trait Model
      *
      * @param string $table An existing table in the database.
      */
-    protected static function setTable($table)
+    protected function setTable($table)
     {
         if (gettype($table) !== 'string') {
             throw new InvalidArgumentException("The parameter {$table} is not a string. A string is required instead.");
         }
 
-        $this->_table = $table;
+        self::$_table = $table;
 
-        $columns = $this->_connection->getColumns($table);
+        $columns = self::$_connection->getColumns($table);
+
         for ($i = 0; $i < count($columns); $i++) {
-            array_push($this->_attributes, $columns[i][key($columns[i])]);
+            self::$_attributes[$columns[$i]["column_name"]] = null;
         }
 
-        $this->_primaryKey = $this->_connection->getPrimaryKey($table);
+        self::$_primaryKey = self::$_connection->getPrimaryKey($table);
     }
 }

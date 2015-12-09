@@ -6,21 +6,25 @@ use PDO;
 use PDOException;
 use InvalidArgumentException;
 use Opeyemiabiodun\PotatoORM\Connections\Connection;
+use Opeyemiabiodun\PotatoORM\Connections\LoadEnvVariablesTrait;
+use Opeyemiabiodun\PotatoORM\Connections\DatabaseTransactionsTrait;
 
-final class MySqlConnection extends Connection
+final class MySqlConnection implements Connection
 {
+    use LoadEnvVariablesTrait, DatabaseTransactionsTrait;
+
     /**
      * The method called in the constructor.
      *
      * @return void
      */
-    protected function connect()
+    private function __construct()
     {
         $this->useDbEnv();
 
-        $dsn = 'mysql:host='.$this->_host;
-        $dsn .= (isset($this->_port)) ? ';port='.$this->_port : '';
-        $dsn .= ';dbname='.$this->_database;
+        $dsn = 'mysql:host='.$this->_host
+                .';port='.$this->_port
+                .';dbname='.$this->_database;
 
         try {
             $this->_pdo = new PDO($dsn, $this->_username, $this->_password);
@@ -48,6 +52,16 @@ final class MySqlConnection extends Connection
     }
 
     /**
+     * Returns the Connection's PDO.
+     *
+     * @return PDO PHP Data Objects
+     */
+    public function getPdo()
+    {
+        return $this->_pdo;
+    }
+
+    /**
      * Returns the primary key of a table.
      *
      * @param string $table The table inspected for its primary key.
@@ -61,5 +75,10 @@ final class MySqlConnection extends Connection
         }
 
         return $this->getPdo()->query("SHOW KEYS FROM {$table} WHERE Key_name = 'PRIMARY'")->fetchAll()[0]['Column_name'];
+    }
+
+    public static function load()
+    {
+        return new MySqlConnection();
     }
 }
