@@ -142,12 +142,22 @@ trait DatabaseTransactionsTrait
 
         $sql = "UPDATE {$table} SET ";
         foreach ($record as $key => $value) {
-            if ($count > 1) {
-                $sql = $sql."{$key}={$value}, ";
-            } else {
-                $sql = $sql."{$key}={$value} ";
-            }
+
             $count--;
+
+            if ($key === $this->getPrimaryKey($table)) {
+                continue;
+            }
+
+            if ($count > 0) {
+
+                $sql = $sql."{$key}='{$value}', ";
+
+            } else {
+
+                $sql = $sql."{$key}='{$value}' ";
+
+            }
         }
         $sql .= "WHERE {$this->getPrimaryKey($table)}='{$pk}'";
 
