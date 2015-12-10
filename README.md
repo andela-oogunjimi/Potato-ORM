@@ -22,7 +22,35 @@ $ composer require opeyemiabiodun/potato-orm
 
 ``` php
 
+#Create a record from the database
 
+$user = new User();
+$user->name = "Tayo";
+$user->address = "54, Kilani street, Akarigbo, Jiyanland.";
+$user->phone = "07834531265";
+$user->save();
+
+
+#Find a record from the database
+
+$user = User::find($id);
+
+
+#Update a record
+
+$user = User::find($id);
+$user->address = "No. 1 Update grove, off The Past Street, Now Savedland.";
+$user->save();
+
+
+#Delete a record -- returns a boolean
+
+$result = User::destroy($id):
+
+
+#Find all users in the database - Returns object array
+
+$users = User::getAll();
 
 ```
 
