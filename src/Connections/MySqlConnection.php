@@ -13,12 +13,20 @@ final class MySqlConnection implements Connection
 {
     use LoadEnvVariablesTrait, DatabaseTransactionsTrait;
 
+
+    /**
+     * $_pdo The PDO instance of the connection.
+     *
+     * @var PDO
+     */
+    private $_pdo;
+    
     /**
      * The method called in the constructor.
      *
      * @return void
      */
-    private function __construct()
+    public function __construct()
     {
         $this->useDbEnv();
 
@@ -75,10 +83,5 @@ final class MySqlConnection implements Connection
         }
 
         return $this->getPdo()->query("SHOW KEYS FROM {$table} WHERE Key_name = 'PRIMARY'")->fetchAll()[0]['Column_name'];
-    }
-
-    public static function load()
-    {
-        return new MySqlConnection();
     }
 }
