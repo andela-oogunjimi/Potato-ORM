@@ -30,13 +30,6 @@ trait LoadEnvVariablesTrait
     private $_password;
 
     /**
-     * $_pdo The PDO instance of the connection.
-     *
-     * @var PDO
-     */
-    private $_pdo;
-
-    /**
      *  $_port The port number to the database server.
      *
      * @var string

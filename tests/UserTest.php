@@ -80,7 +80,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
 	/**
      * @expectedException InvalidArgumentException
      */
-	public function testDeleteUserInvalidArgumentExceptionI()
+	public function testDeleteUserInvalidArgumentExceptionForRealIntegers()
 	{
 		User::destroy("3");
 	}
@@ -88,7 +88,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
 	/**
      * @expectedException InvalidArgumentException
      */
-	public function testDeleteUserInvalidArgumentExceptionII()
+	public function testDeleteUserInvalidArgumentExceptionForNegativeIntegers()
 	{
 		User::destroy(-1);
 	}
@@ -96,7 +96,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
 	/**
      * @expectedException InvalidArgumentException
      */
-	public function testFindUserInvalidArgumentExceptionI()
+	public function testFindUserInvalidArgumentExceptionForRealIntegers()
 	{
 		User::find("3");
 	}
@@ -104,7 +104,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
 	/**
      * @expectedException InvalidArgumentException
      */
-	public function testFindUserInvalidArgumentExceptionII()
+	public function testFindUserInvalidArgumentExceptionForNegativeIntegers()
 	{
 		User::find(-1);
 	}
@@ -114,7 +114,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
      */
 	public function testSetTableInvalidArgumentException()
 	{
-		$anotheruser = new User([], null, 1234);
+		$anotherUser = new User([], null, 1234);
 	}
 
 	/**

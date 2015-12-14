@@ -15,11 +15,18 @@ final class PgSqlConnection implements Connection
     use LoadEnvVariablesTrait, DatabaseTransactionsTrait;
 
     /**
+     * $_pdo The PDO instance of the connection.
+     *
+     * @var PDO
+     */
+    private $_pdo;
+    
+    /**
      * The method called in the constructor.
      *
      * @return void
      */
-    private function __construct()
+    public function __construct()
     {
         $this->useDbEnv();
 
@@ -85,10 +92,5 @@ final class PgSqlConnection implements Connection
         }
 
         return $array[0]['primarykeycolumn'];
-    }
-
-    public static function load()
-    {
-        return new PgSqlConnection();
     }
 }
