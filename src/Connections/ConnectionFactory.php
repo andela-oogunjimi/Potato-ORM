@@ -9,13 +9,19 @@ use Opeyemiabiodun\PotatoORM\Connections\SqliteConnection;
 
 class ConnectionFactory
 {
+        private static $_mySqlConnection;
+
+        private static $_pgSqlConnection;
+
+        private static $_sqliteConnection;
+
 	private function __construct()
 	{
 	}
 
 	public static function load()
 	{
-
+                
                 $dotenv = new Dotenv(__DIR__.'/../..');
                 $dotenv->load();
 
@@ -24,16 +30,22 @@ class ConnectionFactory
                 switch (getenv('DB_ENGINE')) 
                 {
                 	case 'mysql':
-        		        return new MySqlConnection();
-                		break;
+                                if (self::$_mySqlConnection == null) {
+                                        self::$_mySqlConnection = new MySqlConnection();        
+                                } 
+        		        return self::$_mySqlConnection;
 
         		case 'pgsql':
-                		return new PgSqlConnection();
-                		break;
+                                if (self::$_pgSqlConnection == null) {
+                                        self::$_pgSqlConnection = new PgSqlConnection();        
+                                } 
+                                return self::$_pgSqlConnection;
 
                         case 'sqlite':
-                                return new SqliteConnection();
-                                break;
+                                if (self::$_sqliteConnection == null) {
+                                        self::$_sqliteConnection = new SqliteConnection();        
+                                } 
+                                return self::$_sqliteConnection;
                 }		
 	}
 }
