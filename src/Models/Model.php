@@ -48,7 +48,7 @@ trait Model
     public function __construct($array = [], Connection $connection = null, $table = null)
     {
         if (null === $connection) {
-                $connection = ConnectionFactory::load();
+            $connection = ConnectionFactory::load();
         }
 
         if (null === $table) {
