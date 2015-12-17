@@ -5,7 +5,7 @@ namespace Opeyemiabiodun\PotatoORM\Models;
 use RuntimeException;
 use InvalidArgumentException;
 use Opeyemiabiodun\PotatoORM\Connections\Connection;
-use Opeyemiabiodun\PotatoORM\Connections\PgSqlConnection;
+use Opeyemiabiodun\PotatoORM\Connections\ConnectionFactory;
 use Opeyemiabiodun\PotatoORM\Exceptions\AssignmentException;
 use Opeyemiabiodun\PotatoORM\Exceptions\PropertyNotFoundException;
 
@@ -48,7 +48,7 @@ trait Model
     public function __construct($array = [], Connection $connection = null, $table = null)
     {
         if (null === $connection) {
-            $connection = PgSqlConnection::load();
+                $connection = ConnectionFactory::load();
         }
 
         if (null === $table) {
