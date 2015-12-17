@@ -2,12 +2,53 @@
 
 namespace Opeyemiabiodun\PotatoORM\Test;
 
+use PDO;	
 use stdClass;
+use Dotenv\Dotenv;
 use Opeyemiabiodun\PotatoORM\Models\User;
-use Opeyemiabiodun\PotatoORM\Connections\PgSqlConnection;
+use Opeyemiabiodun\PotatoORM\Connections\ConnectionFactory;
+use Opeyemiabiodun\PotatoORM\Test\PotatoORM_DbUnit_ArrayDataSet;
 
-class UserTest extends \PHPUnit_Framework_TestCase
+class UserTest extends \PHPUnit_Extensions_Database_TestCase
 {
+	// only instantiate pdo once for test clean-up/fixture load
+    private $pdo;
+
+    // only instantiate PHPUnit_Extensions_Database_DB_IDatabaseConnection once per test
+    private $conn = null;
+
+    public function __construct($name = null, array $data = [], $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+        $this->pdo = ConnectionFactory::load()->getPdo();
+        User::createTable($this->pdo);
+    }
+
+    final public function getConnection()
+    {
+        if ($this->conn === null) {
+
+            $dotenv = new Dotenv(__DIR__.'/..');
+            $dotenv->load();
+
+            $dotenv->required(['DB_DATABASE'])->notEmpty();
+
+            $this->conn = $this->createDefaultDBConnection($this->pdo, getenv('DB_DATABASE'));
+        }
+
+        return $this->conn;
+    }
+
+    protected function getDataSet()
+    {
+        return new PotatoORM_DbUnit_ArrayDataSet(array(
+            'user_table' => array(
+                array('id' => 1, 'name' => 'Shola Bello', 'address' => '256 private road, off excort park, Kimla, Jimsack.', 'phone' => '07093426538'),
+                array('id' => 2, 'name' => 'Tomori Shogunre',  'address' => '43, kinkol view, samgara.',  'phone' => '08012345678'),
+            ),
+        ));
+    }
+
 	public function testUserInstance()
 	{	
 		$user = new User();
@@ -27,7 +68,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
 	public function testFindandUpdateUser()
 	{
-		$user = User::find(7);
+		$user = User::find(2);
 
 		$this->assertEquals("Opeyemiabiodun\PotatoORM\Models\User", get_class($user));
 
