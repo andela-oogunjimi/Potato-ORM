@@ -72,7 +72,9 @@ trait LoadEnvVariablesTrait
         try {
             $this->loadDbEnv();
         } catch (RuntimeException $e) {
+
         } catch (Exception $e) {
+            
         }
     }
 }
