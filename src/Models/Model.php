@@ -194,7 +194,7 @@ trait Model
 
         $pk = (empty($this->_attributes[self::$_primaryKey])) ? 'NULL' :  $this->_attributes[self::$_primaryKey];
 
-        #$record = self::$_connection->findRecord(self::$_table, (string) $pk);
+        //$record = self::$_connection->findRecord(self::$_table, (string) $pk);
 
         if ('NULL' === $pk) {
             return self::$_connection->createRecord(self::$_table, $this->_attributes);

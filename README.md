@@ -22,7 +22,7 @@ $ composer require opeyemiabiodun/potato-orm
 
 ``` php
 
-#Create a record from the database
+#Create a record in the database
 
 $user = new User();
 $user->name = "Tayo";
