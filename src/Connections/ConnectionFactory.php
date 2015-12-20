@@ -3,49 +3,47 @@
 namespace Opeyemiabiodun\PotatoORM\Connections;
 
 use Dotenv\Dotenv;
-use Opeyemiabiodun\PotatoORM\Connections\PgSqlConnection;
-use Opeyemiabiodun\PotatoORM\Connections\MySqlConnection;
-use Opeyemiabiodun\PotatoORM\Connections\SqliteConnection;
 
 class ConnectionFactory
 {
-        private static $_mySqlConnection;
+    private static $_mySqlConnection;
 
-        private static $_pgSqlConnection;
+    private static $_pgSqlConnection;
 
-        private static $_sqliteConnection;
+    private static $_sqliteConnection;
 
-	private function __construct()
-	{
-	}
+    private function __construct()
+    {
+    }
 
-	public static function load()
-	{
-                
-                $dotenv = new Dotenv(__DIR__.'/../..');
-                $dotenv->load();
+    public static function load()
+    {
+        $dotenv = new Dotenv(__DIR__.'/../..');
+        $dotenv->load();
 
-                $dotenv->required(['DB_ENGINE'])->allowedValues(['mysql', 'pgsql', 'sqlite']);
+        $dotenv->required(['DB_ENGINE'])->allowedValues(['mysql', 'pgsql', 'sqlite']);
 
-                switch (getenv('DB_ENGINE')) 
-                {
-                	case 'mysql':
+        switch (getenv('DB_ENGINE')) {
+                    case 'mysql':
                                 if (self::$_mySqlConnection == null) {
-                                        self::$_mySqlConnection = new MySqlConnection();        
-                                } 
-        		        return self::$_mySqlConnection;
+                                    self::$_mySqlConnection = new MySqlConnection();
+                                }
 
-        		case 'pgsql':
+                        return self::$_mySqlConnection;
+
+                case 'pgsql':
                                 if (self::$_pgSqlConnection == null) {
-                                        self::$_pgSqlConnection = new PgSqlConnection();        
-                                } 
+                                    self::$_pgSqlConnection = new PgSqlConnection();
+                                }
+
                                 return self::$_pgSqlConnection;
 
                         case 'sqlite':
                                 if (self::$_sqliteConnection == null) {
-                                        self::$_sqliteConnection = new SqliteConnection();        
-                                } 
+                                    self::$_sqliteConnection = new SqliteConnection();
+                                }
+
                                 return self::$_sqliteConnection;
-                }		
-	}
+                }
+    }
 }
