@@ -2,16 +2,15 @@
 
 namespace Opeyemiabiodun\PotatoORM\Test;
 
-use PDO;	
+use PDO;
 use stdClass;
 use Dotenv\Dotenv;
 use Opeyemiabiodun\PotatoORM\Models\User;
 use Opeyemiabiodun\PotatoORM\Connections\ConnectionFactory;
-use Opeyemiabiodun\PotatoORM\Test\PotatoORM_DbUnit_ArrayDataSet;
 
 class UserTest extends \PHPUnit_Extensions_Database_TestCase
 {
-	// only instantiate pdo once for test clean-up/fixture load
+    // only instantiate pdo once for test clean-up/fixture load
     private $pdo;
 
     // only instantiate PHPUnit_Extensions_Database_DB_IDatabaseConnection once per test
@@ -27,7 +26,6 @@ class UserTest extends \PHPUnit_Extensions_Database_TestCase
     final public function getConnection()
     {
         if ($this->conn === null) {
-
             $dotenv = new Dotenv(__DIR__.'/..');
             $dotenv->load();
 
@@ -41,141 +39,130 @@ class UserTest extends \PHPUnit_Extensions_Database_TestCase
 
     protected function getDataSet()
     {
-        return new PotatoORM_DbUnit_ArrayDataSet(array(
-            'user_table' => array(
-                array('id' => 1, 'name' => 'Shola Bello', 'address' => '256 private road, off excort park, Kimla, Jimsack.', 'phone' => '07093426538'),
-                array('id' => 2, 'name' => 'Tomori Shogunre',  'address' => '43, kinkol view, samgara.',  'phone' => '08012345678'),
-            ),
-        ));
+        return new PotatoORM_DbUnit_ArrayDataSet([
+            'user_table' => [
+                ['id' => 1, 'name' => 'Shola Bello', 'address' => '256 private road, off excort park, Kimla, Jimsack.', 'phone' => '07093426538'],
+                ['id' => 2, 'name' => 'Tomori Shogunre',  'address' => '43, kinkol view, samgara.',  'phone' => '08012345678'],
+            ],
+        ]);
     }
 
-	public function testUserInstance()
-	{	
-		$user = new User();
-		$user->name = "Tayo";
-		$user->address = "54, Kilani street, Akarigbo, Jiyanland.";
-		$user->phone = "07834531265";
+    public function testUserInstance()
+    {
+        $user = new User();
+        $user->name = 'Tayo';
+        $user->address = '54, Kilani street, Akarigbo, Jiyanland.';
+        $user->phone = '07834531265';
 
-		$this->assertTrue($user->save());
+        $this->assertTrue($user->save());
 
-		$this->assertEquals("Tayo", $user->name);
-	}
-	
-	public function testDeleteUser()
-	{
-		$this->assertTrue(User::destroy(1));
-	}
+        $this->assertEquals('Tayo', $user->name);
+    }
 
-	public function testFindandUpdateUser()
-	{
-		$user = User::find(2);
+    public function testDeleteUser()
+    {
+        $this->assertTrue(User::destroy(1));
+    }
 
-		$this->assertEquals("Opeyemiabiodun\PotatoORM\Models\User", get_class($user));
+    public function testFindandUpdateUser()
+    {
+        $user = User::find(2);
 
-		$user->address = "No. 1 Update grove, off The Past Street, Now Savedland.";
+        $this->assertEquals("Opeyemiabiodun\PotatoORM\Models\User", get_class($user));
 
-		$this->assertTrue($user->save());
-	}
+        $user->address = 'No. 1 Update grove, off The Past Street, Now Savedland.';
 
-	public function testGetAllUsers()
-	{
-		$records = User::getAll();
+        $this->assertTrue($user->save());
+    }
 
-		$count = count(User::getAll());
+    public function testGetAllUsers()
+    {
+        $records = User::getAll();
 
-		for ($i=0; $i < $count; $i++) { 
-			$this->assertEquals("Opeyemiabiodun\PotatoORM\Models\User", get_class($records[$i]));
-		}
-	}
+        $count = count(User::getAll());
 
-	/**
+        for ($i = 0; $i < $count; $i++) {
+            $this->assertEquals("Opeyemiabiodun\PotatoORM\Models\User", get_class($records[$i]));
+        }
+    }
+
+    /**
      * @expectedException Opeyemiabiodun\PotatoORM\Exceptions\PropertyNotFoundException
      */
-	public function testSetPropertyNotFoundException()
-	{
-		$user = new User();
+    public function testSetPropertyNotFoundException()
+    {
+        $user = new User();
 
-		$user->nonproperty = "faker";
-	}
+        $user->nonproperty = 'faker';
+    }
 
-	/**
+    /**
      * @expectedException Opeyemiabiodun\PotatoORM\Exceptions\AssignmentException
      */
-	public function testAssignmentException()
-	{
-		$user = new User();
+    public function testAssignmentException()
+    {
+        $user = new User();
 
-		$user->nonproperty = new stdClass();
-	}
+        $user->nonproperty = new stdClass();
+    }
 
-	/**
+    /**
      * @expectedException Opeyemiabiodun\PotatoORM\Exceptions\PropertyNotFoundException
      */
-	public function testGetPropertyNotFoundException()
-	{
-		$user = new User();
+    public function testGetPropertyNotFoundException()
+    {
+        $user = new User();
 
-		$user->nonproperty;
-	}
+        $user->nonproperty;
+    }
 
-	/**
+    /**
      * @expectedException InvalidArgumentException
      */
-	public function testDeleteUserInvalidArgumentExceptionForRealIntegers()
-	{
-		User::destroy("3");
-	}
+    public function testDeleteUserInvalidArgumentExceptionForRealIntegers()
+    {
+        User::destroy('3');
+    }
 
-	/**
+    /**
      * @expectedException InvalidArgumentException
      */
-	public function testDeleteUserInvalidArgumentExceptionForNegativeIntegers()
-	{
-		User::destroy(-1);
-	}
+    public function testDeleteUserInvalidArgumentExceptionForNegativeIntegers()
+    {
+        User::destroy(-1);
+    }
 
-	/**
+    /**
      * @expectedException InvalidArgumentException
      */
-	public function testFindUserInvalidArgumentExceptionForRealIntegers()
-	{
-		User::find("3");
-	}
+    public function testFindUserInvalidArgumentExceptionForRealIntegers()
+    {
+        User::find('3');
+    }
 
-	/**
+    /**
      * @expectedException InvalidArgumentException
      */
-	public function testFindUserInvalidArgumentExceptionForNegativeIntegers()
-	{
-		User::find(-1);
-	}
+    public function testFindUserInvalidArgumentExceptionForNegativeIntegers()
+    {
+        User::find(-1);
+    }
 
-	/**
+    /**
      * @expectedException InvalidArgumentException
      */
-	public function testSetTableInvalidArgumentException()
-	{
-		$anotherUser = new User([], null, 1234);
-	}
+    public function testSetTableInvalidArgumentException()
+    {
+        $anotherUser = new User([], null, 1234);
+    }
 
-	/**
+    /**
      * @expectedException RuntimeException
      */
-	public function testSaveHasRuntimeException()
-	{
-		$user = new User();
+    public function testSaveHasRuntimeException()
+    {
+        $user = new User();
 
-		$user->save();
-	}
+        $user->save();
+    }
 }
-
-
-
-
-
-
-
-
-
-
-

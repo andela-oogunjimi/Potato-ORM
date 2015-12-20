@@ -5,14 +5,10 @@ namespace Opeyemiabiodun\PotatoORM\Connections;
 use PDO;
 use PDOException;
 use InvalidArgumentException;
-use Opeyemiabiodun\PotatoORM\Connections\Connection;
-use Opeyemiabiodun\PotatoORM\Connections\LoadEnvVariablesTrait;
-use Opeyemiabiodun\PotatoORM\Connections\DatabaseTransactionsTrait;
 
 final class MySqlConnection implements Connection
 {
     use LoadEnvVariablesTrait, DatabaseTransactionsTrait;
-
 
     /**
      * $_pdo The PDO instance of the connection.
@@ -20,7 +16,7 @@ final class MySqlConnection implements Connection
      * @var PDO
      */
     private $_pdo;
-    
+
     /**
      * The method called in the constructor.
      *

@@ -11,15 +11,15 @@ class PotatoORM_DbUnit_ArrayDataSet extends \PHPUnit_Extensions_Database_DataSet
     /**
      * @var array
      */
-    protected $tables = array();
+    protected $tables = [];
 
     /**
      * @param array $data
      */
     public function __construct(array $data)
     {
-        foreach ($data AS $tableName => $rows) {
-            $columns = array();
+        foreach ($data as $tableName => $rows) {
+            $columns = [];
             if (isset($rows[0])) {
                 $columns = array_keys($rows[0]);
             }
@@ -27,21 +27,21 @@ class PotatoORM_DbUnit_ArrayDataSet extends \PHPUnit_Extensions_Database_DataSet
             $metaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData($tableName, $columns);
             $table = new PHPUnit_Extensions_Database_DataSet_DefaultTable($metaData);
 
-            foreach ($rows AS $row) {
+            foreach ($rows as $row) {
                 $table->addRow($row);
             }
             $this->tables[$tableName] = $table;
         }
     }
 
-    protected function createIterator($reverse = FALSE)
+    protected function createIterator($reverse = false)
     {
         return new PHPUnit_Extensions_Database_DataSet_DefaultTableIterator($this->tables, $reverse);
     }
 
     public function getTable($tableName)
     {
-        if (!isset($this->tables[$tableName])) {
+        if (! isset($this->tables[$tableName])) {
             throw new InvalidArgumentException("$tableName is not a table in the current database.");
         }
 
