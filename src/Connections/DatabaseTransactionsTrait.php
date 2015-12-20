@@ -4,7 +4,7 @@ namespace Opeyemiabiodun\PotatoORM\Connections;
 
 use InvalidArgumentException;
 
-trait DatabaseTransactionsTrait 
+trait DatabaseTransactionsTrait
 {
     /**
      * Creates a record in the database.
@@ -28,7 +28,6 @@ trait DatabaseTransactionsTrait
 
         $sql = "INSERT INTO {$table} (";
         foreach ($record as $key => $value) {
-            
             $count--;
 
             if ($key === $this->getPrimaryKey($table)) {
@@ -46,7 +45,6 @@ trait DatabaseTransactionsTrait
 
         $sql .= 'VALUES (';
         foreach ($record as $key => $value) {
-
             $count--;
 
             if ($key === $this->getPrimaryKey($table)) {
@@ -54,9 +52,9 @@ trait DatabaseTransactionsTrait
             }
 
             if ($count > 0) {
-                $sql = (empty($value)) ? $sql."NULL, " : $sql."'{$value}', ";
+                $sql = (empty($value)) ? $sql.'NULL, ' : $sql."'{$value}', ";
             } else {
-                $sql = (empty($value)) ? $sql."NULL " : $sql."'{$value}') ";
+                $sql = (empty($value)) ? $sql.'NULL ' : $sql."'{$value}') ";
             }
         }
 
@@ -142,7 +140,6 @@ trait DatabaseTransactionsTrait
 
         $sql = "UPDATE {$table} SET ";
         foreach ($record as $key => $value) {
-
             $count--;
 
             if ($key === $this->getPrimaryKey($table)) {
@@ -150,13 +147,9 @@ trait DatabaseTransactionsTrait
             }
 
             if ($count > 0) {
-
                 $sql = $sql."{$key}='{$value}', ";
-
             } else {
-
                 $sql = $sql."{$key}='{$value}' ";
-
             }
         }
         $sql .= "WHERE {$this->getPrimaryKey($table)}='{$pk}'";

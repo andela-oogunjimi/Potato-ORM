@@ -52,7 +52,7 @@ trait Model
         }
 
         if (null === $table) {
-            $table = strtolower(substr(get_class($this),strripos(get_class($this), "\\") + 1))."_table";
+            $table = strtolower(substr(get_class($this), strripos(get_class($this), '\\') + 1)).'_table';
         }
 
         $this->setConnection($connection);
@@ -75,7 +75,7 @@ trait Model
         if (array_key_exists($property, $this->_attributes)) {
             return $this->_attributes[$property];
         } else {
-            throw new PropertyNotFoundException("The ".get_class($this)." instance has no {$property} property.");
+            throw new PropertyNotFoundException('The '.get_class($this)." instance has no {$property} property.");
         }
     }
 
@@ -94,7 +94,7 @@ trait Model
         if (array_key_exists($property, $this->_attributes)) {
             $this->_attributes[$property] = $value;
         } else {
-            throw new PropertyNotFoundException("The ".get_class($this)." instance has no {$property} property.");
+            throw new PropertyNotFoundException('The '.get_class($this)." instance has no {$property} property.");
         }
     }
 
@@ -136,11 +136,11 @@ trait Model
         }
 
         $result = new self();
-        
+
         $record = self::$_connection->findRecord(self::$_table, $number - 1);
 
         $result->setProperties($record[0]);
-        
+
         return $result;
     }
 
@@ -156,7 +156,7 @@ trait Model
         $count = count($records);
         $result = [];
 
-        for ($i=0; $i < $count ; $i++) { 
+        for ($i = 0; $i < $count; $i++) {
             array_push($result, new self($records[$i]));
         }
 
@@ -189,14 +189,14 @@ trait Model
     public function save()
     {
         if (! $this->hasAttributes()) {
-            throw new RuntimeException(get_class($this)." model has nothing to persist to the database.");
+            throw new RuntimeException(get_class($this).' model has nothing to persist to the database.');
         }
 
-        $pk = (empty($this->_attributes[self::$_primaryKey])) ? "NULL" :  $this->_attributes[self::$_primaryKey];
+        $pk = (empty($this->_attributes[self::$_primaryKey])) ? 'NULL' :  $this->_attributes[self::$_primaryKey];
 
         #$record = self::$_connection->findRecord(self::$_table, (string) $pk);
 
-        if ("NULL" === $pk) {
+        if ('NULL' === $pk) {
             return self::$_connection->createRecord(self::$_table, $this->_attributes);
         } else {
             return self::$_connection->updateRecord(self::$_table, (string) $pk, $this->_attributes);
@@ -221,11 +221,9 @@ trait Model
     public function setProperties($array)
     {
         foreach ($this->_attributes as $key => $value) {
-
             if (! empty($array[$key])) {
                 $this->_attributes[$key] = $array[$key];
             }
-
         }
     }
 
@@ -245,7 +243,7 @@ trait Model
         $columns = self::$_connection->getColumns($table);
 
         for ($i = 0; $i < count($columns); $i++) {
-            $this->_attributes[$columns[$i]["column_name"]] = null;
+            $this->_attributes[$columns[$i]['column_name']] = null;
         }
 
         self::$_primaryKey = self::$_connection->getPrimaryKey($table);
